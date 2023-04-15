@@ -4,8 +4,8 @@ class Settings:
     def __init__(self):
         # Display
         self.caption = "Alien Invasion"
-        self.screen_height = 1024
-        self.screen_width = 768
+        self.screen_width = 1024
+        self.screen_height = 768
         self.bg_color = (230,230,230)
         self.fps = 60
 

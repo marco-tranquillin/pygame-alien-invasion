@@ -3,6 +3,7 @@ import pygame
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
+from alien import Alien
 
 
 class AlienInvasion:
@@ -15,14 +16,40 @@ class AlienInvasion:
 
         # Define properties
         self.settings = Settings()
-        self.screen = pygame.display.set_mode((self.settings.screen_height, self.settings.screen_width))
+        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption(self.settings.caption)
 
         # create ship object
         self.ship = Ship(self)
+        # create alien group
+        self.aliens = pygame.sprite.Group()
         # create bullet group
         self.bullets = pygame.sprite.Group()
 
+        self._create_fleet()
+
+    def _create_fleet(self):
+        """Create a fleet of aliens"""
+        # Add as many aliens as you can
+        alien = Alien(self)
+        alien_width = alien.rect.width
+        alien_height = alien.rect.height
+
+        current_y = 10
+        while current_y < (self.settings.screen_height - alien_height * 5):
+            # Reset horizontal row
+            current_x = 30
+            while current_x < (self.settings.screen_width - alien_width):
+                new_alien = Alien(self)
+                new_alien.x = current_x
+                new_alien.y = current_y
+                new_alien.rect.x = current_x
+                new_alien.rect.y = current_y
+                self.aliens.add(new_alien)
+                current_x += alien_width + 10
+                print("X:", current_x, "y:", current_y)
+            # Point to next row
+            current_y += alien_height + 10
     def run_game(self):
         """Start the main loop of the game"""
         while True:
@@ -85,6 +112,8 @@ class AlienInvasion:
         self.screen.fill(self.settings.bg_color)
         # Draw ship
         self.ship.blitme()
+        # Drae alien
+        self.aliens.draw(self.screen)
         # Draw bullets
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
